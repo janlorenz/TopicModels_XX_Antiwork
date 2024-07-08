@@ -26,16 +26,16 @@ We have created 10 topic models using the LDA model estimated with
 The models are stored in the `data` folder. The models are named
 `XXAW151`, `XXAW152`, …, `XXAW1510`. The LDAVis can be accessed
 
-[XXAW151](data/XXAW151.html)  
-[XXAW152](data/XXAW152.html)  
-[XXAW153](data/XXAW153.html)  
-[XXAW154](data/XXAW154.html)  
-[XXAW155](data/XXAW155.html)  
-[XXAW156](data/XXAW156.html)  
-[XXAW157](data/XXAW157.html)  
-[XXAW158](data/XXAW158.html)  
-[XXAW159](data/XXAW159.html)  
-[XXAW1510](data/XXAW1510.html)
+[XXAW151](docs/XXAW151.html)  
+[XXAW152](docs/XXAW152.html)  
+[XXAW153](docs/XXAW153.html)  
+[XXAW154](docs/XXAW154.html)  
+[XXAW155](docs/XXAW155.html)  
+[XXAW156](docs/XXAW156.html)  
+[XXAW157](docs/XXAW157.html)  
+[XXAW158](docs/XXAW158.html)  
+[XXAW159](docs/XXAW159.html)  
+[XXAW1510](docs/XXAW1510.html)
 
 ## Model assessment
 
@@ -124,7 +124,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
  ggplot(aes(x = year, y = count, fill=topic)) + 
  geom_col(position = "stack") +
- facet_wrap(~subreddit, ncol = 1) +
+ facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
  scale_fill_manual(values = pals::glasbey(15)) +
  labs(title = "Presence of topics over all documents by year and subreddit")
 ```
@@ -141,7 +141,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
  ggplot(aes(x = year, y = count, fill=topic)) + 
  geom_col(position = "stack") +
- facet_wrap(~subreddit, ncol = 1) +
+ facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
  scale_fill_manual(values = pals::glasbey(15)) +
  labs(title = "Relative frequency of topics over all documents by year and subreddit")
 ```
@@ -238,3 +238,10 @@ XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> h
 | super_soprano13      |     6 |    1 |
 | EQOA_Fanatic         |     1 |    5 |
 | MandrakeThePancake   |     5 |    1 |
+
+``` r
+AceZeroXYZ <- XXAW_top |> filter(author == "AceZeroXYZ") |> 
+ select(subreddit, created_time, created_day, url, title, url, num_comments, score, 
+        T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, selftext) 
+write_csv(AceZeroXYZ, "data/AceZeroXYZ.csv")
+```

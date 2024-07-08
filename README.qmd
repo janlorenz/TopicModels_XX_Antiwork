@@ -31,16 +31,16 @@ We have created 10 topic models using the LDA model estimated with `tomotopy`.
 
 The models are stored in the `data` folder. The models are named `XXAW151`, `XXAW152`, ..., `XXAW1510`. The LDAVis can be accessed 
 
-[XXAW151](data/XXAW151.html)   
-[XXAW152](data/XXAW152.html)   
-[XXAW153](data/XXAW153.html)   
-[XXAW154](data/XXAW154.html)   
-[XXAW155](data/XXAW155.html)   
-[XXAW156](data/XXAW156.html)   
-[XXAW157](data/XXAW157.html)   
-[XXAW158](data/XXAW158.html)   
-[XXAW159](data/XXAW159.html)   
-[XXAW1510](data/XXAW1510.html)
+[XXAW151](docs/XXAW151.html)   
+[XXAW152](docs/XXAW152.html)   
+[XXAW153](docs/XXAW153.html)   
+[XXAW154](docs/XXAW154.html)   
+[XXAW155](docs/XXAW155.html)   
+[XXAW156](docs/XXAW156.html)   
+[XXAW157](docs/XXAW157.html)   
+[XXAW158](docs/XXAW158.html)   
+[XXAW159](docs/XXAW159.html)   
+[XXAW1510](docs/XXAW1510.html)
 
 
 
