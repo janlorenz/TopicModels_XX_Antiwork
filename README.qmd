@@ -1,0 +1,153 @@
+---
+title: "README"
+format: gfm
+---
+
+```{r}
+#| include: false
+library(tidyverse)
+library(arrow)
+library(knitr)
+library(pals)
+XXAW <- read_parquet("data/XXAW.parquet")
+XXAW15_LDAs <- readRDS("data/XXAW15_LDAs.rds")
+vocab_XXAW <- read_csv("data/XXAW151/vocab.csv")
+```
+
+
+## Data
+
+From the collected posts from the subreddits antiwork and twoXchromosomes, we have created a joining both subreddits and the posts with more than 350 words. The data is stored in the parquet file `XXAW.parquet`. These are counts of posts from each subreddit with more than 350 words. 
+
+```{r}
+XXAW |> count(subreddit) |> kable()
+```
+
+
+
+## 10 topic models
+
+We have created 10 topic models using the LDA model estimated with `tomotopy`. 
+
+The models are stored in the `data` folder. The models are named `XXAW151`, `XXAW152`, ..., `XXAW1510`. The LDAVis can be accessed 
+
+[XXAW151](data/XXAW151.html)   
+[XXAW152](data/XXAW152.html)   
+[XXAW153](data/XXAW153.html)   
+[XXAW154](data/XXAW154.html)   
+[XXAW155](data/XXAW155.html)   
+[XXAW156](data/XXAW156.html)   
+[XXAW157](data/XXAW157.html)   
+[XXAW158](data/XXAW158.html)   
+[XXAW159](data/XXAW159.html)   
+[XXAW1510](data/XXAW1510.html)
+
+
+
+## Model assessment
+
+This table shows two metrics for each of the 10 models: perplexity and log-likelihood per word. The lower the perplexity and the higher the log-likelihood per word, the better the model.
+
+```{r}
+XXAW15_LDAs |> select(id, perplexity, ll_per_word) |> kable()
+```
+
+In conclusion, we focus in the following on **LDA 4** as the best model in both measures. 
+In the following we assess which topics appear similarly in the other estimated LDAs. 
+
+... TODO
+
+So, many of the topics in LDA 4 have a one-to-one correspondence with topics in many other LDAs. Typically 13 out of 15 topics from LDA4 appear in each other LDA (not always the same) as a clear one-to-one correspondance.
+Over all other 9 LDA all topics in the majority of these 9 LDAs as a one-to-one correspondance with the topic in LDA4, often in 8 or 9 out of nine.  
+ 
+
+
+## Topics and documents
+
+Most topics are typical for one of the subreddits. (All this is for LDA 4.)
+
+```{r}
+doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
+XXAW_top <- XXAW |> bind_cols(doc_topic)
+XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
+ pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
+ ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev(), x=count, fill=subreddit)) + 
+ geom_col(position = "stack") +
+ facet_wrap(~subreddit) + labs(y = "", title = "Presence of topics over all documents by subreddit") + 
+ guides(fill = "none")
+```
+
+```{r}
+XXAW_top |> mutate(year = year(created_time)) |> 
+ group_by(year) |> summarise(across(paste0("T", 1:15), sum)) |> 
+ pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ scale_fill_manual(values = pals::glasbey(15)) +
+ labs(title = "Presence of topics over all documents by year")
+```
+
+```{r}
+XXAW_top |> mutate(year = year(created_time)) |> 
+ group_by(year) |> summarise(across(paste0("T", 1:15), mean)) |> 
+ pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ scale_fill_manual(values = pals::glasbey(15)) +
+ labs(title = "Relative frequency of topics over all documents by year")
+```
+
+```{r}
+XXAW_top |> mutate(year = year(created_time)) |> 
+ group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
+ pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
+ scale_fill_manual(values = pals::glasbey(15)) +
+ labs(title = "Presence of topics over all documents by year and subreddit")
+```
+
+```{r}
+XXAW_top |> mutate(year = year(created_time)) |> 
+ group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), mean)) |> 
+ pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
+ scale_fill_manual(values = pals::glasbey(15)) +
+ labs(title = "Relative frequency of topics over all documents by year and subreddit")
+```
+
+
+## Users
+
+All users with more than 10 posts in the dataset are shown below. 
+
+```{r}
+XXAW |> count(subreddit, author, sort = TRUE)  |> filter(n > 10) |> arrange(subreddit) |> kable()
+```
+
+These are users who posted in both subreddits. Shown are the twenty users with most posts in both subreddits.
+
+```{r}
+XXusers <- XXAW |> filter(subreddit == "XX") |> count(author, name = "XX_n") 
+AWusers <- XXAW |> filter(subreddit == "AW")  |> count(author, name = "AW_n")
+XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> write_csv("XXAWusers.csv")
+XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> head(20) |> kable()
+```
+
+
+
+```{r}
+AceZeroXYZ <- XXAW_top |> filter(author == "AceZeroXYZ") |> 
+ select(subreddit, created_time, created_day, url, title, url, num_comments, score, 
+        T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, selftext) 
+write_csv(AceZeroXYZ, "data/AceZeroXYZ.csv")
+```
+
+
