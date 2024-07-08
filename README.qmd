@@ -31,16 +31,16 @@ We have created 10 topic models using the LDA model estimated with `tomotopy`.
 
 The models are stored in the `data` folder. The models are named `XXAW151`, `XXAW152`, ..., `XXAW1510`. The LDAVis can be accessed 
 
-[XXAW151](docs/XXAW151.html)   
-[XXAW152](docs/XXAW152.html)   
-[XXAW153](docs/XXAW153.html)   
-[XXAW154](docs/XXAW154.html)   
-[XXAW155](docs/XXAW155.html)   
-[XXAW156](docs/XXAW156.html)   
-[XXAW157](docs/XXAW157.html)   
-[XXAW158](docs/XXAW158.html)   
-[XXAW159](docs/XXAW159.html)   
-[XXAW1510](docs/XXAW1510.html)
+[XXAW151](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW151.html)   
+[XXAW152](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW152.html)   
+[XXAW153](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW153.html)   
+[**XXAW154**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html)   
+[XXAW155](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW155.html)   
+[XXAW156](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW156.html)   
+[XXAW157](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW157.html)   
+[XXAW158](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW158.html)   
+[XXAW159](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html)   
+[XXAW1510](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html)
 
 
 
