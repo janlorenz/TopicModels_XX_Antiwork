@@ -43,6 +43,29 @@ The models are stored in the `data` folder. The models are named `XXAW151`, `XXA
 [XXAW1510](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html)
 
 
+[XX1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html)   
+[XX2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html)   
+[XX3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html)   
+[XX4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html)   
+[XX5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html)   
+[XX6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html)   
+[XX7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html)   
+[XX8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html)   
+[XX9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html)   
+[XX10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html)
+
+[AW1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html)   
+[AW2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html)   
+[AW3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html)   
+[AW4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html)   
+[AW5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html)   
+[AW6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html)   
+[AW7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html)   
+[AW8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html)   
+[AW9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html)   
+[AW10](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html)
+
+
 
 ## Model assessment
 
@@ -76,6 +99,12 @@ XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |>
  facet_wrap(~subreddit) + labs(y = "", title = "Presence of topics over all documents by subreddit") + 
  guides(fill = "none")
 ```
+
+```{r}
+XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
+```
+
+
 
 ```{r}
 XXAW_top |> mutate(year = year(created_time)) |> 

@@ -37,6 +37,28 @@ The models are stored in the `data` folder. The models are named
 [XXAW159](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html)  
 [XXAW1510](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html)
 
+[XX1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html)  
+[XX2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html)  
+[XX3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html)  
+[XX4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html)  
+[XX5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html)  
+[XX6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html)  
+[XX7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html)  
+[XX8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html)  
+[XX9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html)  
+[XX10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html)
+
+[AW1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html)  
+[AW2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html)  
+[AW3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html)  
+[AW4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html)  
+[AW5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html)  
+[AW6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html)  
+[AW7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html)  
+[AW8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html)  
+[AW9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html)  
+[AW10](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html)
+
 ## Model assessment
 
 This table shows two metrics for each of the 10 models: perplexity and
@@ -92,6 +114,39 @@ XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |>
 ![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
 
 ``` r
+XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
+```
+
+    # A tibble: 20 × 31
+       subreddit author   created_time        created_day title selftext url   id   
+       <chr>     <chr>    <dttm>              <chr>       <chr> <chr>    <chr> <chr>
+     1 AW        This_Ma… 2021-11-30 18:19:42 Tuesday     "I j… "About … http… r5tn…
+     2 AW        TheKitt… 2022-01-09 10:54:34 Sunday      "Put… "See ti… http… rzp7…
+     3 AW        WaterFi… 2021-12-31 23:37:38 Friday      "I w… "Wat\n\… http… rt69…
+     4 AW        Shaolin… 2022-06-27 18:06:12 Monday      "Piz… "I work… http… vm1s…
+     5 AW        [delete… 2022-01-28 01:18:20 Friday      "Res… "Hello … http… seec…
+     6 AW        eirfair  2021-11-11 13:16:38 Thursday    "I s… "EDIT: … http… qrl3…
+     7 AW        Caterpi… 2022-12-14 13:32:32 Wednesday   "My … "Note: … http… zlr1…
+     8 AW        [delete… 2021-12-11 13:29:04 Saturday    "Mod… "\\[**U… http… rdzs…
+     9 AW        nowutz   2021-12-29 04:59:17 Wednesday   "Don… "I sobb… http… rqzp…
+    10 AW        --Savat… 2022-04-01 21:01:11 Friday      "My … "I spen… http… tu1f…
+    11 AW        Wide-Mu… 2022-02-27 07:22:20 Sunday      "Got… "I am c… http… t2ip…
+    12 AW        simsacc… 2022-01-21 19:34:49 Friday      "The… "**PLEA… http… s9iv…
+    13 AW        Ability… 2021-11-14 14:32:33 Sunday      "It … "It onl… http… qtqz…
+    14 AW        endersg… 2022-06-25 11:38:42 Saturday    "The… "\\-Alm… http… vkd7…
+    15 XX        Lionoras 2020-11-16 11:50:27 Monday      "No!… "Just b… http… jv5h…
+    16 AW        Throwaw… 2022-01-12 22:11:09 Wednesday   "I a… "I saw … http… s2ig…
+    17 AW        DrWarEa… 2022-01-02 15:06:28 Sunday      "The… "I don'… http… rubf…
+    18 AW        [delete… 2022-01-06 20:20:46 Thursday    "The… "Throwa… http… rxny…
+    19 AW        BilbosB… 2021-10-27 18:58:34 Wednesday   "Fir… "This s… http… qh3u…
+    20 AW        i_love_… 2021-12-24 12:29:03 Friday      "Doe… "It's k… http… rnld…
+    # ℹ 23 more variables: num_comments <dbl>, score <dbl>, upvote_ratio <dbl>,
+    #   ups <dbl>, downs <dbl>, removed_by_category <chr>, title_text <chr>,
+    #   num_words <int>, T1 <dbl>, T2 <dbl>, T3 <dbl>, T4 <dbl>, T5 <dbl>,
+    #   T6 <dbl>, T7 <dbl>, T8 <dbl>, T9 <dbl>, T10 <dbl>, T11 <dbl>, T12 <dbl>,
+    #   T13 <dbl>, T14 <dbl>, T15 <dbl>
+
+``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
  group_by(year) |> summarise(across(paste0("T", 1:15), sum)) |> 
  pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
@@ -102,7 +157,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  labs(title = "Presence of topics over all documents by year")
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -115,7 +170,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  labs(title = "Relative frequency of topics over all documents by year")
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -132,7 +187,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
     `summarise()` has grouped output by 'year'. You can override using the
     `.groups` argument.
 
-![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-8-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -149,7 +204,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
     `summarise()` has grouped output by 'year'. You can override using the
     `.groups` argument.
 
-![](README_files/figure-commonmark/unnamed-chunk-8-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-9-1.png)
 
 ## Users
 

@@ -9,13 +9,13 @@ estimate_LDA_with_tomotopy <- function(data_id, k, rm_top, run_id) {
 }
 one_LDA <- function(data_id, run_id) {
  dir.create(glue("data/{data_id}{run_id}"))
- estimate_LDA_with_tomotopy(data_id, 15, 0, run_id)
+ estimate_LDA_with_tomotopy(data_id, 10, 0, run_id)
 }
 1:10 |> walk(\(id) one_LDA("AWl",id))
-1:10 |> walk(\(id) one_LDA("XXl",id))
-1:10 |> walk(\(id) one_LDA("XXAW",id))
-1:10 |> walk(\(id) one_LDA("XXAW20l",id))
-1:10 |> walk(\(id) one_LDA("XXAW15ll",id))
+2:10 |> walk(\(id) one_LDA("XXl",id))
+#1:10 |> walk(\(id) one_LDA("XXAW",id))
+#1:10 |> walk(\(id) one_LDA("XXAW20l",id))
+#1:10 |> walk(\(id) one_LDA("XXAW15ll",id))
 1:10 |> walk(\(id) one_LDA("XXAW15",id))
 
 ## LDAVis

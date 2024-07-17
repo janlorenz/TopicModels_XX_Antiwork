@@ -6,6 +6,7 @@ library(arrow)
 # It has been retrieved from pushshift
 
 xx_raw <- read_csv("data/XX.csv.gz")
+xx_raw_no_na <- xx_raw %>% select_if(~sum(!is.na(.)) > 0)
 xx <- xx_raw |> 
  select(author, created_time, created_day, title, selftext, url, id, 
         num_comments, score, upvote_ratio, ups, downs, removed_by_category) |> 
@@ -23,6 +24,7 @@ aw <- aw_raw |>
         num_words = str_count(title_text, '\\w+'))
 aw |> filter(num_words > 350, is.na(removed_by_category)) |> 
  write_parquet("data/AWl.parquet")
+system("python3 tomotopy_create_corpus.py 'AWl'")
 aw |> filter(num_words > 175, is.na(removed_by_category)) |> 
  write_parquet("data/AWll.parquet")
 system("python3 tomotopy_create_corpus.py 'AWll'")

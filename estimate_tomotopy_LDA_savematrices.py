@@ -14,8 +14,8 @@ parser.add_argument("run_id", help="ID for the model")
 args = parser.parse_args()
 
 # Load corpus
-# corpus = tp.utils.Corpus.load('data/' + args.data_id + '_corpus.bin')
-corpus = tp.utils.Corpus.load('data/XXAW_corpus.bin')
+corpus = tp.utils.Corpus.load('data/' + args.data_id + '_corpus.bin')
+#corpus = tp.utils.Corpus.load('data/XXAW_corpus.bin')
 
 # Setup LDA model
 mdl = tp.LDAModel(k=int(args.num_topics), alpha=0.1, eta=0.01, min_cf=5, rm_top=int(args.rm_top), corpus=corpus)
@@ -54,9 +54,9 @@ with open("data/" + args.data_id + args.run_id + "/ll_per_word.txt", 'w') as fil
   file.write(str(mdl.ll_per_word))
 with open("data/" + args.data_id + args.run_id + "/perplexity.txt", 'w') as file: 
   file.write(str(mdl.perplexity))
-with open("data/" + args.id + "/alpha.txt", 'w') as file: 
+with open("data/" + args.data_id + args.run_id +  "/alpha.txt", 'w') as file: 
   file.write(str(mdl.alpha))
-with open("data/" + args.id + "/eta.txt", 'w') as file: 
+with open("data/" + args.data_id + args.run_id +  "/eta.txt", 'w') as file: 
   file.write(str(mdl.eta))
   
 
