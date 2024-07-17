@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "LDA Topics Models in Posts from Antiwork and TwoXChromosomes"
 format: gfm
 ---
 
@@ -9,83 +9,153 @@ library(tidyverse)
 library(arrow)
 library(knitr)
 library(pals)
+AW <- read_parquet("data/AWl.parquet")
+AWl_LDAs <- readRDS("data/AWl_LDAs.rds")
+XX <- read_parquet("data/XXl.parquet")
+XXl_LDAs <- readRDS("data/XXl_LDAs.rds")
 XXAW <- read_parquet("data/XXAW.parquet")
 XXAW15_LDAs <- readRDS("data/XXAW15_LDAs.rds")
-vocab_XXAW <- read_csv("data/XXAW151/vocab.csv")
 ```
 
 
-## Data
+## Data: All posts, selected posts (> 350 words), 3 corpora (Antiwork, TwoXChromosomes, Antiwork+TwoXChromosomes)
 
-From the collected posts from the subreddits antiwork and twoXchromosomes, we have created a joining both subreddits and the posts with more than 350 words. The data is stored in the parquet file `XXAW.parquet`. These are counts of posts from each subreddit with more than 350 words. 
+All posts from the subreddits [Antiwork](https://www.reddit.com/r/antiwork/) and [TwoXChromosomes](https://www.reddit.com/r/TwoXChromosomes/) have been collected using the data dumps of pushshift in 2023. This includes post from the very beginning of the subreddits until the end of 2022. 
+
+For both data sets we then selected relevant variables, in particular the `title` string and the `selftext` string which is the post's text. We joined both stings into one sting and counted the words. Then we selected only those posts where title and text together have more than 350 words (additionally posts should not be marked as removed from reddit in the dataset). The strings in these texts where then used to construct a corpus for the topic models. (That means we tokenized the text and removed stop words with a slighlty customized selection of words as documented in the script `tomotopy_create_corpus.py`.)
+
+For **Antiwork** there were 292.352 posts in the raw data. 132.617 of these have a non-empty seleftext. Combining title and selftext **22.629** posts have more than 350 words and build the documents in the Antiwork corpus. The number of words of the texts in the documents of the corpus range from 351 to 7875 (with mean 629.4 and median 520 words).
+
+For **TwoXChromosomes** there were 420.486 posts in the raw data. 239.744 of these have a non-empty seleftext. Combining title and selftext **61.601** posts have more than 350 words and build the documents in the TwoXChromosomes corpus. The number of words of the texts in the documents of the corpus range from 351 to 7263 (with mean 613.4 and median 501 words).
+
+Number of posts in Antiwork and TwoXChromosomes:
 
 ```{r}
-XXAW |> count(subreddit) |> kable()
+#| echo: false
+#| fig.height: 6
+read_csv("data/XXAW_count_posts.csv", show_col_types = FALSE) |>
+ ggplot(aes(x = `Time (monthly)`, y = Count, color = Type)) + geom_line() + facet_wrap(~Subreddit, scales = "free_y", nrow = 2) + 
+ ggtitle("Number of posts") + theme_minimal() 
 ```
 
-
-
-## 10 topic models
-
-We have created 10 topic models using the LDA model estimated with `tomotopy`. 
-
-The models are stored in the `data` folder. The models are named `XXAW151`, `XXAW152`, ..., `XXAW1510`. The LDAVis can be accessed 
-
-[XXAW151](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW151.html)   
-[XXAW152](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW152.html)   
-[XXAW153](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW153.html)   
-[**XXAW154**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html)   
-[XXAW155](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW155.html)   
-[XXAW156](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW156.html)   
-[XXAW157](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW157.html)   
-[XXAW158](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW158.html)   
-[XXAW159](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html)   
-[XXAW1510](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html)
-
-
-[XX1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html)   
-[XX2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html)   
-[XX3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html)   
-[XX4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html)   
-[XX5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html)   
-[XX6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html)   
-[XX7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html)   
-[XX8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html)   
-[XX9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html)   
-[XX10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html)
-
-[AW1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html)   
-[AW2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html)   
-[AW3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html)   
-[AW4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html)   
-[AW5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html)   
-[AW6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html)   
-[AW7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html)   
-[AW8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html)   
-[AW9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html)   
-[AW10](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html)
-
-
-
-## Model assessment
-
-This table shows two metrics for each of the 10 models: perplexity and log-likelihood per word. The lower the perplexity and the higher the log-likelihood per word, the better the model.
-
+The number of posts in Antiwork before 2018 is quite low. Only occasionally one per month ended up in our corpus:
 ```{r}
-XXAW15_LDAs |> select(id, perplexity, ll_per_word) |> kable()
+#| echo: false
+#| fig.height: 2.5
+read_csv("data/XXAW_count_posts.csv", show_col_types = FALSE) |>
+ filter(`Time (monthly)` < "2018-01-01", Subreddit == "Antiwork") |>
+ ggplot(aes(x = `Time (monthly)`, y = Count, color = Type)) + geom_line() + 
+ ggtitle("Antiwork") + theme_minimal() 
 ```
 
-In conclusion, we focus in the following on **LDA 4** as the best model in both measures. 
-In the following we assess which topics appear similarly in the other estimated LDAs. 
 
-... TODO
+Finally we combined the two corpora into one corpus **Antiwork+TwoXChromosomes** with **84.230** documents. 
+
+The Antiwork corpus has a vocabulary of `r read_csv("data/AWl1/vocab.csv", show_col_types = FALSE) |> nrow() |> format(big.mark = ".")` words, the TwoXChromosomes corpus has a vocabulary of `r read_csv("data/XXl1/vocab.csv", show_col_types = FALSE) |> nrow()|> format(big.mark = ".")` words and the combined corpus has a vocabulary of `r read_csv("data/XXAW151/vocab.csv", show_col_types = FALSE) |> nrow()|> format(big.mark = ".")` words.
+
+
+## 10 LDA topic models for each corpus
+
+We have created 10 topic models for each corpus (Antiwork, TwoXChromosomes and Antiwork+TwoXChromosomes) using the LDA model estimated with `tomotopy`. 
+For the Antiwork and the TwoXChromosomes corpus we estimated LDAs with 10 topics. For the combined corpus we estimated LDAs with 15 topics. 
+
+The following table shows the links to the visualizations of the topics of all LDAs constructed with `pyLDAvis`. 
+The visualizations are interactive and allow to explore the topics and the words in the topics. 
+There is a parameter $\lambda$ which can be adjusted to show the words of the topics arranged 
+by the most common words in the topic ($\lambda = 1$), by the most common words as a fraction of their appearance in the whole corpus ($\lambda = 0$) or a mix between the two. 
+The links below show the topic's words with $\lambda = 0.5$.
+
+Antiwork LDAs | TwoXChromosomes LDAs | Antiwork+TwoXChromosomes LDAs |
+--------------|----------------------|-------------------------------|
+[Antiwork 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW151.html#topic=0&lambda=0.5&term=)   |
+[Antiwork 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW152.html#topic=0&lambda=0.5&term=)   |
+[Antiwork 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW153.html#topic=0&lambda=0.5&term=)   |
+[Antiwork 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html#topic=0&lambda=0.5&term=)    | [**Antiwork+TwoXChromosomes 4**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=0&lambda=0.5&term=)   |
+[Antiwork 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html#topic=0&lambda=0.5&term=)   | [**TwoXChromosomes 5**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW155.html#topic=0&lambda=0.5&term=)   |   
+[Antiwork 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW156.html#topic=0&lambda=0.5&term=)   |     
+[Antiwork 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW157.html#topic=0&lambda=0.5&term=)   |     
+[Antiwork 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW158.html#topic=0&lambda=0.5&term=)   |    
+[Antiwork 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html#topic=0&lambda=0.5&term=)   | [TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html#topic=0&lambda=0.5&term=)    | [Antiwork+TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html#topic=0&lambda=0.5&term=)   |  
+[**Antiwork 10**](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html#topic=0&lambda=0.5&term=)  | [Antiwork+TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html#topic=0&lambda=0.5&term=) |
+
+For each LDA perplexity scores and log-likelihood per word are calculated. The numbers are shown in a table in the Appendix below. 
+The lower the perplexity and the higher the log-likelihood per word, the better the model. 
+Based on these numbers we can select the best fitting LDA for each corpus. 
+Consistently between the two measures, the best fitting LDA for Antiwork is 10, for TwoXChromosomes it is 5, and for Antiwork+TwoXChromosomes 4. 
+Those are highlighted in the table above and used as the main reference in the following. 
+
+The others LDAs serve to assess the robustness of the results because LDAs tend to not be converging to exactly the same solution when run again. 
+
+## Subreddit Identity Topics
+
+For both subreddits one topic can be interpreted as the subreddit identity topic. 
+
+### Antiwork
+
+[Antiwork LDA 10, Topic 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html#topic=3&lambda=0.5&term=)  
+is about "we" "our" "us" "workers" "society" as top words and also has the words "strike" "capitalism" "movement" and others in it. 
+It is also the topic with the word "we" scoring highest and by the context this seems to relate to a collective "we" of the subreddit or a community transcending it. 
+
+The Antiwork identity topic appears very similar as [Antiwork+TwoXChromosomes 4, Topic 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=4&lambda=0.5&term=)
+
+### TwoXChromosomes
+
+[TwoXChromosomes LDA 5, Topic 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html#topic=6&lambda=0.5&term=)  
+is about "women" "men" "woman" "people" "male" as top words and also has the words "feminism" "sexism" "trans" and others in it. 
+The word "we" is not in the top words (although it is also not marginal in the topic). 
+This is because other topics have the word "we" in it but these are the topics about family and relationships where the context of the "we" 
+indicates that "we" relates to family or the relationship and not to a group identity of the subreddit. 
+
+The TwoXChromosomes identity topic appears very similar in [Antiwork+TwoXChromosomes 4, Topic 12](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=12&lambda=0.5&term=)
+
+
+
+# FROM HERE WORK IN PROGESS
+
+## Robustness of LDAs
 
 So, many of the topics in LDA 4 have a one-to-one correspondence with topics in many other LDAs. Typically 13 out of 15 topics from LDA4 appear in each other LDA (not always the same) as a clear one-to-one correspondance.
 Over all other 9 LDA all topics in the majority of these 9 LDAs as a one-to-one correspondance with the topic in LDA4, often in 8 or 9 out of nine.  
  
+...
+
+## Antiwork LDA 10
+
+```{r}
+doc_topic <- AWl_LDAs$doc_topic_dists[[10]]
+AW_top <- AW |> bind_cols(doc_topic)
+AW_top |> mutate(year = year(created_time)) |> 
+ group_by(year) |> summarise(across(paste0("T", 1:10), sum)) |> 
+ pivot_longer(cols = paste0("T", 1:10), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:10))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ scale_fill_manual(values = pals::glasbey(10)) +
+ labs(title = "Presence of topics over all documents by year")
+```
 
 
-## Topics and documents
+
+## TwoXChromosomes LDA 10
+
+
+```{r}
+doc_topic <- XXl_LDAs$doc_topic_dists[[5]]
+XX_top <- XX |> bind_cols(doc_topic)
+XX_top |> mutate(year = year(created_time)) |> 
+ group_by(year) |> summarise(across(paste0("T", 1:10), sum)) |> 
+ pivot_longer(cols = paste0("T", 1:10), names_to = "topic", values_to = "count") |>
+ mutate(topic = factor(topic, levels = paste0("T", 1:10))) |> 
+ ggplot(aes(x = year, y = count, fill=topic)) + 
+ geom_col(position = "stack") +
+ scale_fill_manual(values = pals::glasbey(10)) +
+ labs(title = "Presence of topics over all documents by year")
+```
+
+
+
+
+## Antiwork+TwoXChromosomes LDA 4: Topics and documents
 
 Most topics are typical for one of the subreddits. (All this is for LDA 4.)
 
@@ -180,3 +250,19 @@ write_csv(AceZeroXYZ, "AceZeroXYZ.csv")
 ```
 
 
+
+
+
+## Appendix
+
+### Perplexity and log-likelihood per word for all LDA models
+
+```{r}
+#| echo=FALSE
+bind_rows(
+ AWl_LDAs |> select(id, perplexity, ll_per_word) |> mutate(id = str_replace(id, "AWl", "Antiwork ")),
+ XXl_LDAs |> select(id, perplexity, ll_per_word) |> mutate(id = str_replace(id, "XXl", "TwoXChromosomes ")),
+ XXAW15_LDAs |> select(id, perplexity, ll_per_word) |> mutate(id = str_replace(id, "XXAW15l", "Antiwork+TwoXChromosomes ")) 
+) |> rename(LDA = id, Perplexity = perplexity, `Log-likelihood per word` = ll_per_word) |>
+ knitr::kable()
+```

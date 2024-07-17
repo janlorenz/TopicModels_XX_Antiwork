@@ -2,43 +2,58 @@ library(tidyverse)
 library(glue)
 library(arrow)
 
-# XX_LDAs <- tibble(id = paste0("XXl",1:10)) |> 
-#  mutate(topic_term_dists = map(id, ~read_csv(glue("data/{.}/topic_term_dists.csv")) |> 
-#                                 t() |> as_tibble() |> set_names(paste0("T", 1:10))))
-# saveRDS(XX_LDAs, "data/XX_LDAs.rds")
-XX_LDAs <- readRDS("data/XX_LDAs.rds")
-vocab <- read_csv(glue("data/{id}/vocab.csv"))
-id <- "XXAW15"
-1:10 |> walk(\(num) system(glue("python3 add_ll_per_word_perplexity.py 'XXAW15{num}'")))
+# Script to read in all LDAs for a specific id (XXl, AWl, XXAW15) and save as one df for further analysis
+read_more_LDAs_into_df_save_RDS <- function(id, nums, k) tibble(id = paste0(id,nums)) |>
+ mutate(topic_term_dists = map(id, ~read_csv(glue("data/{.}/topic_term_dists.csv")) |> # This step takes time because it is a wide csv
+                                t() |> as_tibble() |> set_names(paste0("T", 1:k))),
+        doc_topic_dists = map(id, ~read_csv(glue("data/{.}/doc_topic_dists.csv")) |>
+                               set_names(paste0("T", 1:k))),
+        perplexity = map_dbl(id, ~read_lines(glue("data/{.}/perplexity.txt"))[1] |> as.numeric()),
+        ll_per_word = map_dbl(id, ~read_lines(glue("data/{.}/ll_per_word.txt"))[1] |> as.numeric()),
+        alpha = map(id, ~read_lines(glue("data/{.}/alpha.txt")) |> str_split(" ") |> unlist() |>
+                     str_replace("\\[","") |> str_replace("\\]","") |> as.numeric() |>
+                     na.exclude() |> as_tibble()),
+        eta =  map_dbl(id, ~read_lines(glue("data/{.}/eta.txt"))[1] |> as.numeric())
+ )
+# For "XXl"
+if (!file.exists("data/XXl_LDAs.rds")) {
+  XXl_LDAs <- read_more_LDAs_into_df_save_RDS("XXl", 1:10, 10)
+  saveRDS(XXl_LDAs, "data/XXl_LDAs.rds")
+}
+# For "AWl"
+if (!file.exists("data/AWl_LDAs.rds")) {
+  AWl_LDAs <- read_more_LDAs_into_df_save_RDS("AWl", 1:10, 10)
+  saveRDS(AWl_LDAs, "data/AWl_LDAs.rds")
+}
+# For "XXAW15"
+if (!file.exists("data/XXAW15_LDAs.rds")) {
+  XXAW15_LDAs <- read_more_LDAs_into_df_save_RDS("XXAW15", 1:10, 15)
+  saveRDS(XXAW15_LDAs, "data/XXAW15_LDAs.rds")
+}
 
-# XXAW20l_LDAs <- tibble(id = paste0("XXAW20l",1:10)) |> 
-#  mutate(topic_term_dists = map(id, ~read_csv(glue("data/{.}/topic_term_dists.csv")) |> 
-#                                 t() |> as_tibble() |> set_names(paste0("T", 1:20))))
-# saveRDS(XXAW20l_LDAs, "data/XXAW20l_LDAs.rds")
-XXAW20l_LDAs <- readRDS("data/XXAW20l_LDAs.rds")
-vocab_XXAW <- read_csv(glue("data/XXAW20l1/vocab.csv"))
+# For "AWl"
+AWl_LDAs <- readRDS("data/AWl_LDAs.rds")
+AWl <- read_parquet("data/AWl.parquet")
+AWl_LDAs |> filter(ll_per_word == max(ll_per_word))
+AWl_LDAs |> filter(perplexity == min(perplexity))
+# AWl Consistently model 10 is selected as best model
 
+# For "XXl"
+XXl_LDAs <- readRDS("data/XXl_LDAs.rds")
+XXl <- read_parquet("data/XXl.parquet")
+XXl_LDAs |> filter(ll_per_word == max(ll_per_word))
+XXl_LDAs |> filter(perplexity == min(perplexity))
+# XXl Consistently model 5 is selected as best model
 
-# XXAW15_LDAs <- tibble(id = paste0("XXAW15",1:10)) |>
-#  mutate(topic_term_dists = map(id, ~read_csv(glue("data/{.}/topic_term_dists.csv")) |>
-#                                 t() |> as_tibble() |> set_names(paste0("T", 1:15))),
-#         doc_topic_dists = map(id, ~read_csv(glue("data/{.}/doc_topic_dists.csv")) |>
-#                                set_names(paste0("T", 1:15))),
-#         perplexity = map_dbl(id, ~read_lines(glue("data/{.}/perplexity.txt"))[1] |> as.numeric()),
-#         ll_per_word = map_dbl(id, ~read_lines(glue("data/{.}/ll_per_word.txt"))[1] |> as.numeric()),
-#         alpha = map(id, ~read_lines(glue("data/{.}/alpha.txt")) |> str_split(" ") |> unlist() |> 
-#                      str_replace("\\[","") |> str_replace("\\]","") |> as.numeric() |> 
-#                      na.exclude() |> as_tibble()), 
-#         eta =  map_dbl(id, ~read_lines(glue("data/{.}/eta.txt"))[1] |> as.numeric())
-#  ) 
-# saveRDS(XXAW15_LDAs, "data/XXAW15_LDAs.rds")
+# For "XXAW15"
 XXAW15_LDAs <- readRDS("data/XXAW15_LDAs.rds")
-vocab_XXAW <- read_csv(glue("data/XXAW151/vocab.csv"))
-XXAW <- read_parquet("data/XXAW.parquet")
-# Read perplexity.txt
+XXAW15 <- read_parquet("data/XXAW.parquet")
 XXAW15_LDAs |> filter(ll_per_word == max(ll_per_word))
 XXAW15_LDAs |> filter(perplexity == min(perplexity))
-# XXAW20l Consistently model 4 is selected as best model
+# XXAW15 Consistently model 4 is selected as best model
+
+
+## Comparing Topic Similarity
 
 # Cosine Similarity
 cossim <- function(A,B) (sum(A*B))/sqrt((sum(A^2))*(sum(B^2)))

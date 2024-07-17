@@ -1,0 +1,7 @@
+argparse
+pandas
+numpy<2
+pyarrow
+nltk
+tomotopy
+pyLDAvis

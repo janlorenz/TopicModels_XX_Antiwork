@@ -15,7 +15,7 @@ args = parser.parse_args()
 
 # Load corpus
 corpus = tp.utils.Corpus.load('data/' + args.data_id + '_corpus.bin')
-#corpus = tp.utils.Corpus.load('data/XXAW_corpus.bin')
+corpus = tp.utils.Corpus.load('data/XXl_corpus.bin')
 
 # Setup LDA model
 mdl = tp.LDAModel(k=int(args.num_topics), alpha=0.1, eta=0.01, min_cf=5, rm_top=int(args.rm_top), corpus=corpus)
@@ -70,5 +70,5 @@ prepared_data = pyLDAvis.prepare(
     start_index=1, # tomotopy starts topic ids with 0, pyLDAvis with 1
     sort_topics=False # IMPORTANT: otherwise the topic_ids between pyLDAvis and tomotopy are not matching!
 )
-pyLDAvis.save_html(prepared_data, "data/" + args.data_id + args.run_id + '.html')
-pyLDAvis.save_json(prepared_data, "data/" + args.data_id + args.run_id + '.json')
+pyLDAvis.save_html(prepared_data, "docs/" + args.data_id + args.run_id + '.html')
+# pyLDAvis.save_json(prepared_data, "data/" + args.data_id + args.run_id + '.json')
