@@ -1,6 +1,25 @@
 # LDA Topics Models in Posts from Antiwork and TwoXChromosomes
 
 
+- [Data: All posts, selected posts (\> 350 words), 3 corpora (Antiwork,
+  TwoXChromosomes,
+  Antiwork+TwoXChromosomes)](#data-all-posts-selected-posts--350-words-3-corpora-antiwork-twoxchromosomes-antiworktwoxchromosomes)
+- [10 LDA topic models for each
+  corpus](#10-lda-topic-models-for-each-corpus)
+- [Subreddit Identity Topics](#subreddit-identity-topics)
+  - [Antiwork](#antiwork)
+  - [TwoXChromosomes](#twoxchromosomes)
+- [FROM HERE WORK IN PROGESS](#from-here-work-in-progess)
+  - [Robustness of LDAs](#robustness-of-ldas)
+  - [Antiwork LDA 10](#antiwork-lda-10)
+  - [TwoXChromosomes LDA 10](#twoxchromosomes-lda-10)
+  - [Antiwork+TwoXChromosomes LDA 4: Topics and
+    documents](#antiworktwoxchromosomes-lda-4-topics-and-documents)
+  - [Users](#users)
+  - [Appendix](#appendix)
+    - [Perplexity and log-likelihood per word for all LDA
+      models](#perplexity-and-log-likelihood-per-word-for-all-lda-models)
+
 ## Data: All posts, selected posts (\> 350 words), 3 corpora (Antiwork, TwoXChromosomes, Antiwork+TwoXChromosomes)
 
 All posts from the subreddits
@@ -66,18 +85,18 @@ of the topics arranged by the most common words in the topic
 appearance in the whole corpus ($\lambda = 0$) or a mix between the two.
 The links below show the topic’s words with $\lambda = 0.5$.
 
-| Antiwork LDAs                                                                                              | TwoXChromosomes LDAs                                                                                            | Antiwork+TwoXChromosomes LDAs                                                                                               |
-|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| [Antiwork 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW151.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW152.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW153.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html#topic=0&lambda=0.5&term=)     | [**Antiwork+TwoXChromosomes 4**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=0&lambda=0.5&term=) |
-| [Antiwork 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html#topic=0&lambda=0.5&term=)       | [**TwoXChromosomes 5**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW155.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW156.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW157.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW158.html#topic=0&lambda=0.5&term=)     |
-| [Antiwork 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html#topic=0&lambda=0.5&term=)       | [TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html#topic=0&lambda=0.5&term=)     | [Antiwork+TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html#topic=0&lambda=0.5&term=)     |
-| [**Antiwork 10**](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html#topic=0&lambda=0.5&term=)   | [Antiwork+TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html#topic=0&lambda=0.5&term=)   |
+| Antiwork LDAs | TwoXChromosomes LDAs | Antiwork+TwoXChromosomes LDAs |
+|----|----|----|
+| [Antiwork 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl1.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl1.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 1](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW151.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl2.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl2.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 2](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW152.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl3.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl3.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 3](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW153.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl4.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 4](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl4.html#topic=0&lambda=0.5&term=) | [**Antiwork+TwoXChromosomes 4**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl5.html#topic=0&lambda=0.5&term=) | [**TwoXChromosomes 5**](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl5.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 5](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW155.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl6.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl6.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 6](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW156.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl7.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl7.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 7](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW157.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl8.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl8.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 8](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW158.html#topic=0&lambda=0.5&term=) |
+| [Antiwork 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl9.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl9.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 9](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW159.html#topic=0&lambda=0.5&term=) |
+| [**Antiwork 10**](https://janlorenz.github.io/TopicModels_XX_Antiwork/AWl10.html#topic=0&lambda=0.5&term=) | [TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXl10.html#topic=0&lambda=0.5&term=) | [Antiwork+TwoXChromosomes 10](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW1510.html#topic=0&lambda=0.5&term=) |
 
 For each LDA perplexity scores and log-likelihood per word are
 calculated. The numbers are shown in a table in the Appendix below. The
@@ -186,44 +205,54 @@ XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |>
  pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
  ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev(), x=count, fill=subreddit)) + 
  geom_col(position = "stack") +
- facet_wrap(~subreddit) + labs(y = "", title = "Presence of topics over all documents by subreddit") + 
+ facet_wrap(~subreddit) + 
+ labs(y = "", title = "Presence of topics over all documents by subreddit", 
+      caption = "Topic probabilities sum up to 1 for each post.\nThe barcharts can be interpreted as counting posts\nwhere each post contributes the fraction the topic has in it.") + 
  guides(fill = "none")
 ```
 
 ![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
 
 ``` r
-XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
+doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
+XXAW_top <- XXAW |> bind_cols(doc_topic)
+XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
+ pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
+ mutate(Fraction = count/sum(count), .by = subreddit) |> 
+ ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev(), x=Fraction, fill=subreddit)) + 
+ geom_col(position = 'dodge') +
+ labs(y = "", title = "Presence of topics over all documents by subreddit as percentage in subreddit") + 
+ guides(fill = "none")
 ```
 
-    # A tibble: 20 × 31
-       subreddit author   created_time        created_day title selftext url   id   
-       <chr>     <chr>    <dttm>              <chr>       <chr> <chr>    <chr> <chr>
-     1 AW        This_Ma… 2021-11-30 18:19:42 Tuesday     "I j… "About … http… r5tn…
-     2 AW        TheKitt… 2022-01-09 10:54:34 Sunday      "Put… "See ti… http… rzp7…
-     3 AW        WaterFi… 2021-12-31 23:37:38 Friday      "I w… "Wat\n\… http… rt69…
-     4 AW        Shaolin… 2022-06-27 18:06:12 Monday      "Piz… "I work… http… vm1s…
-     5 AW        [delete… 2022-01-28 01:18:20 Friday      "Res… "Hello … http… seec…
-     6 AW        eirfair  2021-11-11 13:16:38 Thursday    "I s… "EDIT: … http… qrl3…
-     7 AW        Caterpi… 2022-12-14 13:32:32 Wednesday   "My … "Note: … http… zlr1…
-     8 AW        [delete… 2021-12-11 13:29:04 Saturday    "Mod… "\\[**U… http… rdzs…
-     9 AW        nowutz   2021-12-29 04:59:17 Wednesday   "Don… "I sobb… http… rqzp…
-    10 AW        --Savat… 2022-04-01 21:01:11 Friday      "My … "I spen… http… tu1f…
-    11 AW        Wide-Mu… 2022-02-27 07:22:20 Sunday      "Got… "I am c… http… t2ip…
-    12 AW        simsacc… 2022-01-21 19:34:49 Friday      "The… "**PLEA… http… s9iv…
-    13 AW        Ability… 2021-11-14 14:32:33 Sunday      "It … "It onl… http… qtqz…
-    14 AW        endersg… 2022-06-25 11:38:42 Saturday    "The… "\\-Alm… http… vkd7…
-    15 XX        Lionoras 2020-11-16 11:50:27 Monday      "No!… "Just b… http… jv5h…
-    16 AW        Throwaw… 2022-01-12 22:11:09 Wednesday   "I a… "I saw … http… s2ig…
-    17 AW        DrWarEa… 2022-01-02 15:06:28 Sunday      "The… "I don'… http… rubf…
-    18 AW        [delete… 2022-01-06 20:20:46 Thursday    "The… "Throwa… http… rxny…
-    19 AW        BilbosB… 2021-10-27 18:58:34 Wednesday   "Fir… "This s… http… qh3u…
-    20 AW        i_love_… 2021-12-24 12:29:03 Friday      "Doe… "It's k… http… rnld…
-    # ℹ 23 more variables: num_comments <dbl>, score <dbl>, upvote_ratio <dbl>,
-    #   ups <dbl>, downs <dbl>, removed_by_category <chr>, title_text <chr>,
-    #   num_words <int>, T1 <dbl>, T2 <dbl>, T3 <dbl>, T4 <dbl>, T5 <dbl>,
-    #   T6 <dbl>, T7 <dbl>, T8 <dbl>, T9 <dbl>, T10 <dbl>, T11 <dbl>, T12 <dbl>,
-    #   T13 <dbl>, T14 <dbl>, T15 <dbl>
+![](README_files/figure-commonmark/unnamed-chunk-7-1.png)
+
+There are only two topics which appear more or less equally often in
+both subreddits: Topic 13, about school time (roughly 3%) and topic 11
+about police (roughly 2.5%). The clearly antiwork dominated topics are
+2, 4, 5 and 7. The other topics are XX dominated: 1, 3, 6, 8, 9, 10, 12,
+14, and 15.
+
+``` r
+doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
+XXAW_top <- XXAW |> bind_cols(doc_topic)
+XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
+ pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
+ mutate(Fraction = count/sum(count), .by = subreddit) |> 
+ mutate(Fraction_topic = Fraction/sum(Fraction),
+        Fraction_XX = Fraction_topic[1], 
+        .by = topic) |> 
+ ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev() |> fct_reorder(Fraction_XX), x=Fraction_topic, fill=subreddit)) + 
+ geom_col(position = 'stack') +
+ labs(y = "", title = "Topic frequency within subreddits normalized per topic\nordered from most AW to most XX dominated") + 
+ guides(fill = "none")
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-8-1.png)
+
+``` r
+#XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
+```
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -236,7 +265,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  labs(title = "Presence of topics over all documents by year")
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-8-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-10-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -249,7 +278,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
  labs(title = "Relative frequency of topics over all documents by year")
 ```
 
-![](README_files/figure-commonmark/unnamed-chunk-9-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-11-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -266,7 +295,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
     `summarise()` has grouped output by 'year'. You can override using the
     `.groups` argument.
 
-![](README_files/figure-commonmark/unnamed-chunk-10-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-12-1.png)
 
 ``` r
 XXAW_top |> mutate(year = year(created_time)) |> 
@@ -283,7 +312,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
     `summarise()` has grouped output by 'year'. You can override using the
     `.groups` argument.
 
-![](README_files/figure-commonmark/unnamed-chunk-11-1.png)
+![](README_files/figure-commonmark/unnamed-chunk-13-1.png)
 
 ## Users
 
