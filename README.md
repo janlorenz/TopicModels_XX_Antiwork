@@ -39,18 +39,17 @@ text and removed stop words with a slighlty customized selection of
 words as documented in the script `tomotopy_create_corpus.py`.)
 
 For **Antiwork** there were 292.352 posts in the raw data. 132.617 of
-these have a non-empty seleftext. Combining title and selftext
-**22.629** posts have more than 350 words and build the documents in the
-Antiwork corpus. The number of words of the texts in the documents of
-the corpus range from 351 to 7875 (with mean 629.4 and median 520
-words).
+these have a non-empty selftext. Combining title and selftext **22.629**
+posts have more than 350 words and build the documents in the Antiwork
+corpus. The number of words of the texts in the documents of the corpus
+range from 351 to 7875 (with mean 629.4 and median 520 words).
 
 For **TwoXChromosomes** there were 420.486 posts in the raw data.
-239.744 of these have a non-empty seleftext. Combining title and
-selftext **61.601** posts have more than 350 words and build the
-documents in the TwoXChromosomes corpus. The number of words of the
-texts in the documents of the corpus range from 351 to 7263 (with mean
-613.4 and median 501 words).
+239.744 of these have a non-empty selftext. Combining title and selftext
+**61.601** posts have more than 350 words and build the documents in the
+TwoXChromosomes corpus. The number of words of the texts in the
+documents of the corpus range from 351 to 7263 (with mean 613.4 and
+median 501 words).
 
 Number of posts in Antiwork and TwoXChromosomes:
 
