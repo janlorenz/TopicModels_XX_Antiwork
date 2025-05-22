@@ -1,8 +1,10 @@
 ---
-title: "LDA Topics Models in Posts from Antiwork and TwoXChromosomes"
+title: "LDA Topic Models in Posts from Antiwork and TwoXChromosomes"
 format: 
   gfm: 
     toc: true
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -24,20 +26,23 @@ XXAW15_LDAs <- readRDS("data/XXAW15_LDAs.rds")
 
 All posts from the subreddits [Antiwork](https://www.reddit.com/r/antiwork/) and [TwoXChromosomes](https://www.reddit.com/r/TwoXChromosomes/) have been collected using the data dumps of pushshift in 2023. This includes post from the very beginning of the subreddits until the end of 2022. 
 
-For both data sets we then selected relevant variables, in particular the `title` string and the `selftext` string which is the post's text. We joined both stings into one sting and counted the words. Then we selected only those posts where title and text together have more than 350 words (additionally posts should not be marked as removed from reddit in the dataset). The strings in these texts where then used to construct a corpus for the topic models. (That means we tokenized the text and removed stop words with a slighlty customized selection of words as documented in the script `tomotopy_create_corpus.py`.)
+For both data sets we then selected relevant variables, in particular the `title` string and the `selftext` string which is the post's text. We joined both strings into one string and counted the words. Then we selected only those posts where title and text together have more than 350 words (additionally posts should not be marked as removed from reddit in the dataset). The strings in these texts where then used to construct a corpus for the topic models. (That means we tokenized the text and removed stop words with a slighlty customized selection of words as documented in the script `tomotopy_create_corpus.py`.)
 
 For **Antiwork** there were 292.352 posts in the raw data. 132.617 of these have a non-empty selftext. Combining title and selftext **22.629** posts have more than 350 words and build the documents in the Antiwork corpus. The number of words of the texts in the documents of the corpus range from 351 to 7875 (with mean 629.4 and median 520 words).
 
 For **TwoXChromosomes** there were 420.486 posts in the raw data. 239.744 of these have a non-empty selftext. Combining title and selftext **61.601** posts have more than 350 words and build the documents in the TwoXChromosomes corpus. The number of words of the texts in the documents of the corpus range from 351 to 7263 (with mean 613.4 and median 501 words).
 
-Number of posts in Antiwork and TwoXChromosomes:
+Number of posts and words in Antiwork and TwoXChromosomes:
 
 ```{r}
 #| echo: false
 #| fig.height: 6
 read_csv("data/XXAW_count_posts.csv", show_col_types = FALSE) |>
- ggplot(aes(x = `Time (monthly)`, y = Count, color = Type)) + geom_line() + facet_wrap(~Subreddit, scales = "free_y", nrow = 2) + 
- ggtitle("Number of posts") + theme_minimal() 
+ mutate(`Time (monthly)` = as.Date(`Time (monthly)`)) |> 
+ ggplot(aes(x = `Time (monthly)`, y = Number, color = Data)) + geom_line() + 
+ facet_wrap(Subreddit ~ Counting, scales = "free_y", nrow = 2) + 
+ scale_x_date(date_minor_breaks = "1 year") +
+ ggtitle("Amount of discourse") + theme_minimal() 
 ```
 
 The number of posts in Antiwork before 2018 is quite low. Only occasionally one per month ended up in our corpus:
@@ -45,8 +50,8 @@ The number of posts in Antiwork before 2018 is quite low. Only occasionally one 
 #| echo: false
 #| fig.height: 2.5
 read_csv("data/XXAW_count_posts.csv", show_col_types = FALSE) |>
- filter(`Time (monthly)` < "2018-01-01", Subreddit == "Antiwork") |>
- ggplot(aes(x = `Time (monthly)`, y = Count, color = Type)) + geom_line() + 
+ filter(`Time (monthly)` < "2018-01-01", Subreddit == "Antiwork", Counting == "Posts") |>
+ ggplot(aes(x = `Time (monthly)`, y = Number, color = Data)) + geom_line() + 
  ggtitle("Antiwork") + theme_minimal() 
 ```
 
@@ -112,23 +117,11 @@ The TwoXChromosomes identity topic appears very similar in [Antiwork+TwoXChromos
 
 
 
-# FROM HERE WORK IN PROGESS
-
-- Put the 15 all LDA here?
-- What to do with topic distribution plots?
-    - Only do fro 10 topics
-
-
-## Robustness of LDAs
-
-So, many of the topics in LDA 4 have a one-to-one correspondence with topics in many other LDAs. Typically 13 out of 15 topics from LDA4 appear in each other LDA (not always the same) as a clear one-to-one correspondance.
-Over all other 9 LDA all topics in the majority of these 9 LDAs as a one-to-one correspondance with the topic in LDA4, often in 8 or 9 out of nine.  
- 
-...
 
 ## Antiwork LDA 10
 
 ```{r}
+#| echo: false
 doc_topic <- AWl_LDAs$doc_topic_dists[[10]]
 AW_top <- AW |> bind_cols(doc_topic)
 AW_top |> mutate(year = year(created_time)) |> 
@@ -147,6 +140,7 @@ AW_top |> mutate(year = year(created_time)) |>
 
 
 ```{r}
+#| echo: false
 doc_topic <- XXl_LDAs$doc_topic_dists[[5]]
 XX_top <- XX |> bind_cols(doc_topic)
 XX_top |> mutate(year = year(created_time)) |> 
@@ -167,6 +161,7 @@ XX_top |> mutate(year = year(created_time)) |>
 Most topics are typical for one of the subreddits. (All this is for LDA 4.)
 
 ```{r}
+#| echo: false
 doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
 XXAW_top <- XXAW |> bind_cols(doc_topic)
 XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
@@ -194,6 +189,7 @@ XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |>
 There are only two topics which appear more or less equally often in both subreddits: Topic 13, about school time (roughly 3%) and topic 11 about police (roughly 2.5%). The clearly antiwork dominated topics are 2, 4, 5 and 7. The other topics are XX dominated: 1, 3, 6, 8, 9, 10, 12, 14, and 15.   
 
 ```{r}
+#| echo: false
 doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
 XXAW_top <- XXAW |> bind_cols(doc_topic)
 XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
@@ -210,13 +206,10 @@ XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |>
 
 
 
-```{r}
-#XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
-```
-
 
 
 ```{r}
+#| echo: false
 XXAW_top |> mutate(year = year(created_time)) |> 
  group_by(year) |> summarise(across(paste0("T", 1:15), sum)) |> 
  pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
@@ -228,6 +221,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
 ```
 
 ```{r}
+#| echo: false
 XXAW_top |> mutate(year = year(created_time)) |> 
  group_by(year) |> summarise(across(paste0("T", 1:15), mean)) |> 
  pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
@@ -239,6 +233,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
 ```
 
 ```{r}
+#| echo: false
 XXAW_top |> mutate(year = year(created_time)) |> 
  group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
  pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
@@ -251,6 +246,7 @@ XXAW_top |> mutate(year = year(created_time)) |>
 ```
 
 ```{r}
+#| echo: false
 XXAW_top |> mutate(year = year(created_time)) |> 
  group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), mean)) |> 
  pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
@@ -269,7 +265,8 @@ XXAW_top |> mutate(year = year(created_time)) |>
 ### Perplexity and log-likelihood per word for all LDA models
 
 ```{r}
-#| echo=FALSE
+#| echo: false
+
 bind_rows(
  AWl_LDAs |> select(id, perplexity, ll_per_word) |> mutate(id = str_replace(id, "AWl", "Antiwork ")),
  XXl_LDAs |> select(id, perplexity, ll_per_word) |> mutate(id = str_replace(id, "XXl", "TwoXChromosomes ")),

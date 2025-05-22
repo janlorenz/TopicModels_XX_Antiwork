@@ -44,16 +44,29 @@ aw |> filter(num_words > 350, is.na(removed_by_category)) |>
 system("python3 tomotopy_create_corpus.py 'AWl'")
 
 # Write counts for posts monthly
-bind_row(
+bind_rows(
  xx |> mutate(`Time (monthly)`= floor_date(created_time, "month")) |> 
-  group_by(`Time (monthly)`) |> summarise(`All posts` = n(), `Posts in corpus` = sum(num_words > 350 & is.na(removed_by_category))) |> 
-  pivot_longer(cols = c(`All posts`, `Posts in corpus`), names_to = "Type", values_to = "Count") |> 
+  group_by(`Time (monthly)`) |> 
+  summarise(`All posts` = n(), 
+            `Posts in corpus` = sum(num_words > 350 & is.na(removed_by_category)),
+            tot = sum(num_words), 
+            tco = sum(num_words[num_words > 350  & is.na(removed_by_category)])) |> 
+  pivot_longer(cols = c(`All posts`, `Posts in corpus`,tot, tco), 
+               names_to = "Data", values_to = "Number") |> 
   mutate(Subreddit = "TwoXChromosomes"), 
  aw |> mutate(`Time (monthly)`= floor_date(created_time, "month")) |> 
-  group_by(`Time (monthly)`) |> summarise(`All posts` = n(), `Posts in corpus` = sum(num_words > 350 & is.na(removed_by_category))) |> 
-  pivot_longer(cols = c(`All posts`, `Posts in corpus`), names_to = "Type", values_to = "Count") |> 
+  group_by(`Time (monthly)`) |> 
+  summarise(`All posts` = n(), 
+            `Posts in corpus` = sum(num_words > 350 & is.na(removed_by_category)),
+            tot = sum(num_words), 
+            tco = sum(num_words[num_words > 350  & is.na(removed_by_category)])) |> 
+  pivot_longer(cols = c(`All posts`, `Posts in corpus`,tot, tco), 
+               names_to = "Data", values_to = "Number") |> 
   mutate(Subreddit = "Antiwork")
-) |> write_csv("data/XXAW_count_posts.csv")
+ ) |> 
+ mutate(`Counting` = if_else(Data == "tot" | Data == "tco", "Words", "Posts")) |> 
+ mutate(Data = Data |> str_replace("tot","All posts") |> str_replace("tco","Posts in corpus")) |> 
+ write_csv("data/XXAW_count_posts.csv")
 
 
 ## Combined corpus

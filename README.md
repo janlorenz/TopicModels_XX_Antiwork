@@ -1,4 +1,4 @@
-# LDA Topics Models in Posts from Antiwork and TwoXChromosomes
+# LDA Topic Models in Posts from Antiwork and TwoXChromosomes
 
 
 - [Data: All posts, selected posts (\> 350 words), 3 corpora (Antiwork,
@@ -9,15 +9,13 @@
 - [Subreddit Identity Topics](#subreddit-identity-topics)
   - [Antiwork](#antiwork)
   - [TwoXChromosomes](#twoxchromosomes)
-- [FROM HERE WORK IN PROGESS](#from-here-work-in-progess)
-  - [Robustness of LDAs](#robustness-of-ldas)
-  - [Antiwork LDA 10](#antiwork-lda-10)
-  - [TwoXChromosomes LDA 10](#twoxchromosomes-lda-10)
-  - [Antiwork+TwoXChromosomes LDA 4: Topics and
-    documents](#antiworktwoxchromosomes-lda-4-topics-and-documents)
-  - [Appendix](#appendix)
-    - [Perplexity and log-likelihood per word for all LDA
-      models](#perplexity-and-log-likelihood-per-word-for-all-lda-models)
+- [Antiwork LDA 10](#antiwork-lda-10)
+- [TwoXChromosomes LDA 10](#twoxchromosomes-lda-10)
+- [Antiwork+TwoXChromosomes LDA 4: Topics and
+  documents](#antiworktwoxchromosomes-lda-4-topics-and-documents)
+- [Appendix](#appendix)
+  - [Perplexity and log-likelihood per word for all LDA
+    models](#perplexity-and-log-likelihood-per-word-for-all-lda-models)
 
 ## Data: All posts, selected posts (\> 350 words), 3 corpora (Antiwork, TwoXChromosomes, Antiwork+TwoXChromosomes)
 
@@ -29,7 +27,7 @@ from the very beginning of the subreddits until the end of 2022.
 
 For both data sets we then selected relevant variables, in particular
 the `title` string and the `selftext` string which is the post’s text.
-We joined both stings into one sting and counted the words. Then we
+We joined both strings into one string and counted the words. Then we
 selected only those posts where title and text together have more than
 350 words (additionally posts should not be marked as removed from
 reddit in the dataset). The strings in these texts where then used to
@@ -50,7 +48,7 @@ TwoXChromosomes corpus. The number of words of the texts in the
 documents of the corpus range from 351 to 7263 (with mean 613.4 and
 median 501 words).
 
-Number of posts in Antiwork and TwoXChromosomes:
+Number of posts and words in Antiwork and TwoXChromosomes:
 
 ![](README_files/figure-commonmark/unnamed-chunk-2-1.png)
 
@@ -144,54 +142,11 @@ The TwoXChromosomes identity topic appears very similar in
 [Antiwork+TwoXChromosomes 4, Topic
 12](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=12&lambda=0.5&term=)
 
-# FROM HERE WORK IN PROGESS
-
-- Put the 15 all LDA here?
-- What to do with topic distribution plots?
-  - Only do fro 10 topics
-
-## Robustness of LDAs
-
-So, many of the topics in LDA 4 have a one-to-one correspondence with
-topics in many other LDAs. Typically 13 out of 15 topics from LDA4
-appear in each other LDA (not always the same) as a clear one-to-one
-correspondance. Over all other 9 LDA all topics in the majority of these
-9 LDAs as a one-to-one correspondance with the topic in LDA4, often in 8
-or 9 out of nine.
-
-…
-
 ## Antiwork LDA 10
-
-``` r
-doc_topic <- AWl_LDAs$doc_topic_dists[[10]]
-AW_top <- AW |> bind_cols(doc_topic)
-AW_top |> mutate(year = year(created_time)) |> 
- group_by(year) |> summarise(across(paste0("T", 1:10), sum)) |> 
- pivot_longer(cols = paste0("T", 1:10), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:10))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- scale_fill_manual(values = pals::glasbey(10)) +
- labs(title = "Presence of topics over all documents by year")
-```
 
 ![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
 
 ## TwoXChromosomes LDA 10
-
-``` r
-doc_topic <- XXl_LDAs$doc_topic_dists[[5]]
-XX_top <- XX |> bind_cols(doc_topic)
-XX_top |> mutate(year = year(created_time)) |> 
- group_by(year) |> summarise(across(paste0("T", 1:10), sum)) |> 
- pivot_longer(cols = paste0("T", 1:10), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:10))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- scale_fill_manual(values = pals::glasbey(10)) +
- labs(title = "Presence of topics over all documents by year")
-```
 
 ![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
 
@@ -199,19 +154,6 @@ XX_top |> mutate(year = year(created_time)) |>
 
 Most topics are typical for one of the subreddits. (All this is for LDA
 4.)
-
-``` r
-doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
-XXAW_top <- XXAW |> bind_cols(doc_topic)
-XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
- pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
- ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev(), x=count, fill=subreddit)) + 
- geom_col(position = "stack") +
- facet_wrap(~subreddit) + 
- labs(y = "", title = "Presence of topics over all documents by subreddit", 
-      caption = "Topic probabilities sum up to 1 for each post.\nThe barcharts can be interpreted as counting posts\nwhere each post contributes the fraction the topic has in it.") + 
- guides(fill = "none")
-```
 
 ![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
 
@@ -235,86 +177,21 @@ about police (roughly 2.5%). The clearly antiwork dominated topics are
 2, 4, 5 and 7. The other topics are XX dominated: 1, 3, 6, 8, 9, 10, 12,
 14, and 15.
 
-``` r
-doc_topic <- XXAW15_LDAs$doc_topic_dists[[4]]
-XXAW_top <- XXAW |> bind_cols(doc_topic)
-XXAW_top |> group_by(subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
- pivot_longer(cols = -subreddit, names_to = "topic", values_to = "count") |> 
- mutate(Fraction = count/sum(count), .by = subreddit) |> 
- mutate(Fraction_topic = Fraction/sum(Fraction),
-        Fraction_XX = Fraction_topic[1], 
-        .by = topic) |> 
- ggplot(aes(y=factor(topic, levels = paste0("T", 1:15)) |> fct_rev() |> fct_reorder(Fraction_XX), x=Fraction_topic, fill=subreddit)) + 
- geom_col(position = 'stack') +
- labs(y = "", title = "Topic frequency within subreddits normalized per topic\nordered from most AW to most XX dominated") + 
- guides(fill = "none")
-```
-
 ![](README_files/figure-commonmark/unnamed-chunk-8-1.png)
 
-``` r
-#XXAW_top |> arrange(desc(num_comments)) |> select(subreddit, everything()) |> head(20)
-```
-
-``` r
-XXAW_top |> mutate(year = year(created_time)) |> 
- group_by(year) |> summarise(across(paste0("T", 1:15), sum)) |> 
- pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- scale_fill_manual(values = pals::glasbey(15)) +
- labs(title = "Presence of topics over all documents by year")
-```
+![](README_files/figure-commonmark/unnamed-chunk-9-1.png)
 
 ![](README_files/figure-commonmark/unnamed-chunk-10-1.png)
 
-``` r
-XXAW_top |> mutate(year = year(created_time)) |> 
- group_by(year) |> summarise(across(paste0("T", 1:15), mean)) |> 
- pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- scale_fill_manual(values = pals::glasbey(15)) +
- labs(title = "Relative frequency of topics over all documents by year")
-```
+    `summarise()` has grouped output by 'year'. You can override using the
+    `.groups` argument.
 
 ![](README_files/figure-commonmark/unnamed-chunk-11-1.png)
-
-``` r
-XXAW_top |> mutate(year = year(created_time)) |> 
- group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), sum)) |> 
- pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
- scale_fill_manual(values = pals::glasbey(15)) +
- labs(title = "Presence of topics over all documents by year and subreddit")
-```
 
     `summarise()` has grouped output by 'year'. You can override using the
     `.groups` argument.
 
 ![](README_files/figure-commonmark/unnamed-chunk-12-1.png)
-
-``` r
-XXAW_top |> mutate(year = year(created_time)) |> 
- group_by(year,subreddit) |> summarise(across(paste0("T", 1:15), mean)) |> 
- pivot_longer(cols = paste0("T", 1:15), names_to = "topic", values_to = "count") |>
- mutate(topic = factor(topic, levels = paste0("T", 1:15))) |> 
- ggplot(aes(x = year, y = count, fill=topic)) + 
- geom_col(position = "stack") +
- facet_wrap(~subreddit, ncol = 1, scales = "free_y") +
- scale_fill_manual(values = pals::glasbey(15)) +
- labs(title = "Relative frequency of topics over all documents by year and subreddit")
-```
-
-    `summarise()` has grouped output by 'year'. You can override using the
-    `.groups` argument.
-
-![](README_files/figure-commonmark/unnamed-chunk-13-1.png)
 
 ## Appendix
 
