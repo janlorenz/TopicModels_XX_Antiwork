@@ -26,9 +26,9 @@ All posts from the subreddits [Antiwork](https://www.reddit.com/r/antiwork/) and
 
 For both data sets we then selected relevant variables, in particular the `title` string and the `selftext` string which is the post's text. We joined both stings into one sting and counted the words. Then we selected only those posts where title and text together have more than 350 words (additionally posts should not be marked as removed from reddit in the dataset). The strings in these texts where then used to construct a corpus for the topic models. (That means we tokenized the text and removed stop words with a slighlty customized selection of words as documented in the script `tomotopy_create_corpus.py`.)
 
-For **Antiwork** there were 292.352 posts in the raw data. 132.617 of these have a non-empty seleftext. Combining title and selftext **22.629** posts have more than 350 words and build the documents in the Antiwork corpus. The number of words of the texts in the documents of the corpus range from 351 to 7875 (with mean 629.4 and median 520 words).
+For **Antiwork** there were 292.352 posts in the raw data. 132.617 of these have a non-empty selftext. Combining title and selftext **22.629** posts have more than 350 words and build the documents in the Antiwork corpus. The number of words of the texts in the documents of the corpus range from 351 to 7875 (with mean 629.4 and median 520 words).
 
-For **TwoXChromosomes** there were 420.486 posts in the raw data. 239.744 of these have a non-empty seleftext. Combining title and selftext **61.601** posts have more than 350 words and build the documents in the TwoXChromosomes corpus. The number of words of the texts in the documents of the corpus range from 351 to 7263 (with mean 613.4 and median 501 words).
+For **TwoXChromosomes** there were 420.486 posts in the raw data. 239.744 of these have a non-empty selftext. Combining title and selftext **61.601** posts have more than 350 words and build the documents in the TwoXChromosomes corpus. The number of words of the texts in the documents of the corpus range from 351 to 7263 (with mean 613.4 and median 501 words).
 
 Number of posts in Antiwork and TwoXChromosomes:
 
@@ -113,6 +113,11 @@ The TwoXChromosomes identity topic appears very similar in [Antiwork+TwoXChromos
 
 
 # FROM HERE WORK IN PROGESS
+
+- Put the 15 all LDA here?
+- What to do with topic distribution plots?
+    - Only do fro 10 topics
+
 
 ## Robustness of LDAs
 
@@ -256,35 +261,6 @@ XXAW_top |> mutate(year = year(created_time)) |>
  scale_fill_manual(values = pals::glasbey(15)) +
  labs(title = "Relative frequency of topics over all documents by year and subreddit")
 ```
-
-
-## Users
-
-All users with more than 10 posts in the dataset are shown below. 
-
-```{r}
-XXAW |> count(subreddit, author, sort = TRUE)  |> filter(n > 10) |> arrange(subreddit) |> kable()
-```
-
-These are users who posted in both subreddits. Shown are the twenty users with most posts in both subreddits.
-
-```{r}
-XXusers <- XXAW |> filter(subreddit == "XX") |> count(author, name = "XX_n") 
-AWusers <- XXAW |> filter(subreddit == "AW")  |> count(author, name = "AW_n")
-XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> write_csv("XXAWusers.csv")
-XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> head(20) |> kable()
-```
-
-
-
-```{r}
-AceZeroXYZ <- XXAW_top |> filter(author == "AceZeroXYZ") |> 
- select(subreddit, created_time, created_day, url, title, url, num_comments, score, 
-        T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, selftext) 
-write_csv(AceZeroXYZ, "AceZeroXYZ.csv")
-```
-
-
 
 
 

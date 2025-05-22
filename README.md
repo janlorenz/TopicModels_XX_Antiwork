@@ -15,7 +15,6 @@
   - [TwoXChromosomes LDA 10](#twoxchromosomes-lda-10)
   - [Antiwork+TwoXChromosomes LDA 4: Topics and
     documents](#antiworktwoxchromosomes-lda-4-topics-and-documents)
-  - [Users](#users)
   - [Appendix](#appendix)
     - [Perplexity and log-likelihood per word for all LDA
       models](#perplexity-and-log-likelihood-per-word-for-all-lda-models)
@@ -146,6 +145,10 @@ The TwoXChromosomes identity topic appears very similar in
 12](https://janlorenz.github.io/TopicModels_XX_Antiwork/XXAW154.html#topic=12&lambda=0.5&term=)
 
 # FROM HERE WORK IN PROGESS
+
+- Put the 15 all LDA here?
+- What to do with topic distribution plots?
+  - Only do fro 10 topics
 
 ## Robustness of LDAs
 
@@ -312,101 +315,6 @@ XXAW_top |> mutate(year = year(created_time)) |>
     `.groups` argument.
 
 ![](README_files/figure-commonmark/unnamed-chunk-13-1.png)
-
-## Users
-
-All users with more than 10 posts in the dataset are shown below.
-
-``` r
-XXAW |> count(subreddit, author, sort = TRUE)  |> filter(n > 10) |> arrange(subreddit) |> kable()
-```
-
-| subreddit | author               |     n |
-|:----------|:---------------------|------:|
-| AW        | \[deleted\]          |   649 |
-| AW        | *Raspootin*          |    39 |
-| AW        | Nickzreg             |    25 |
-| AW        | capnbarky            |    22 |
-| AW        | Send_Me_Bee_Stuff    |    16 |
-| AW        | BadassPlaya2517      |    15 |
-| AW        | ournextarc           |    13 |
-| AW        | Waja_wurr90          |    12 |
-| AW        | Wilsthing1988        |    11 |
-| AW        | jcrosse1917          |    11 |
-| AW        | nobodynewknew        |    11 |
-| XX        | \[deleted\]          | 10386 |
-| XX        | AceZeroXYZ           |    40 |
-| XX        | carlinha1289         |    31 |
-| XX        | Help_Me_Reddit01     |    29 |
-| XX        | Murtlepos            |    27 |
-| XX        | Lionoras             |    24 |
-| XX        | shygirlturnedsassy   |    20 |
-| XX        | superpony123         |    20 |
-| XX        | MagzalaAstrallis     |    19 |
-| XX        | bunnydigs            |    19 |
-| XX        | throwaway99111123    |    18 |
-| XX        | Franchesca8899       |    17 |
-| XX        | PinkGreyGirl         |    17 |
-| XX        | rejs7                |    17 |
-| XX        | MisogynyisaDisease   |    16 |
-| XX        | SilverScreen2019     |    16 |
-| XX        | zazzlekdazzle        |    16 |
-| XX        | Crystal_wolf04       |    15 |
-| XX        | newprofilewhodis1352 |    15 |
-| XX        | Some-call-me-ada     |    14 |
-| XX        | Bluellan             |    13 |
-| XX        | PurpleFlame8         |    13 |
-| XX        | VisionsOfLife        |    13 |
-| XX        | catniagara           |    13 |
-| XX        | depressedkittyfr     |    13 |
-| XX        | irishtrashpanda      |    13 |
-| XX        | lil_staal            |    13 |
-| XX        | Easteuroblondie      |    12 |
-| XX        | ScrumptiousCookie123 |    12 |
-| XX        | callmekanga          |    12 |
-| XX        | tama_gotchi          |    12 |
-| XX        | Soft_Reference_6490  |    11 |
-| XX        | monieo               |    11 |
-
-These are users who posted in both subreddits. Shown are the twenty
-users with most posts in both subreddits.
-
-``` r
-XXusers <- XXAW |> filter(subreddit == "XX") |> count(author, name = "XX_n") 
-AWusers <- XXAW |> filter(subreddit == "AW")  |> count(author, name = "AW_n")
-XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> write_csv("XXAWusers.csv")
-XXusers |> inner_join(AWusers, by = "author") |> arrange(desc(XX_n + AW_n)) |> head(20) |> kable()
-```
-
-| author               |  XX_n | AW_n |
-|:---------------------|------:|-----:|
-| \[deleted\]          | 10386 |  649 |
-| newprofilewhodis1352 |    15 |    4 |
-| catniagara           |    13 |    3 |
-| tempted_temptress    |     9 |    6 |
-| Easteuroblondie      |    12 |    2 |
-| Minute-Jello-1919    |     1 |    9 |
-| CurrentSingleStatus  |     5 |    4 |
-| Delta4o              |     6 |    3 |
-| Marblue              |     8 |    1 |
-| annieduty            |     2 |    7 |
-| braveguppy           |     5 |    3 |
-| copper_rainbows      |     7 |    1 |
-| krazyforlove         |     7 |    1 |
-| BakerLovePie         |     6 |    1 |
-| Larry-Man            |     6 |    1 |
-| LongNectarine3       |     6 |    1 |
-| Petallic             |     4 |    3 |
-| super_soprano13      |     6 |    1 |
-| EQOA_Fanatic         |     1 |    5 |
-| MandrakeThePancake   |     5 |    1 |
-
-``` r
-AceZeroXYZ <- XXAW_top |> filter(author == "AceZeroXYZ") |> 
- select(subreddit, created_time, created_day, url, title, url, num_comments, score, 
-        T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, selftext) 
-write_csv(AceZeroXYZ, "AceZeroXYZ.csv")
-```
 
 ## Appendix
 
