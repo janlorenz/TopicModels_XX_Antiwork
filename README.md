@@ -17,6 +17,8 @@
   - [Perplexity and log-likelihood per word for all LDA
     models](#perplexity-and-log-likelihood-per-word-for-all-lda-models)
 
+[![DOI](https://zenodo.org/badge/825978424.svg)](https://doi.org/10.5281/zenodo.14849759)
+
 ## Data: All posts, selected posts (\> 350 words), 3 corpora (Antiwork, TwoXChromosomes, Antiwork+TwoXChromosomes)
 
 All posts from the subreddits
